@@ -4,21 +4,11 @@
 </head>
 <body>
  <h1>Test</h1>
- <!--
- <form action="/write" method="POST">
-	Asset:
-	<input type="text" name="asset" id="asset">
-	Tag:
-	<input type="text" name="tag" id="tag">
-  <input type="submit" value="Insert">
+ <!--generate our csrf token for reporters to retrieve--> 
+ <form>
+ <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
  </form>
- <a href="./deleteall">Delete all</a>
-
-  {% for userinput in userinputs %}
- <!--<p>'{{userinput.assetid}}' has database id {{userinput._id}}</p>
- <p><b>{{userinput.assetid}}</b> has tag id <b>{{userinput.tagid}}</b> and database id {{userinput._id}}</p>
- {% endfor %}
- -->
+ 
  <a href="/upsert">Upsert</a><br>
  <a href="/find">Find</a><br>
  <a href="/report">Report</a><br>

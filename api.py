@@ -6,13 +6,12 @@
 
 # Licence:     MIT
 #-------------------------------------------------------------------------------
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, abort
 import os
 from pymongo import MongoClient
 from OpenSSL import SSL
-context = SSL.Context(SSL.SSLv23_METHOD)
-context.use_privatekey_file('ast.key')
-context.use_certificate_file('ast.crt')
+import random
+import string
 
 def connect():
     connection = MongoClient("localhost",27017)
@@ -21,7 +20,32 @@ def connect():
     return handle
 
 app = Flask(__name__)
+app.secret_key = 'why would I tell you my secret key?'
 handle = connect()
+
+#SOME SECURITY
+
+#for CSRF attacks
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = \
+        ''.join(random.choice(string.ascii_uppercase + string.digits) \
+        for _ in range(10))
+    return session['_csrf_token']
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
+#for SSL
+context = SSL.Context(SSL.SSLv23_METHOD)
+context.use_privatekey_file('ast.key')
+context.use_certificate_file('ast.crt')
 
 #MAIN ROUTES
 @app.route("/")
