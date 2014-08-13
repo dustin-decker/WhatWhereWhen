@@ -7,11 +7,13 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 from flask import Flask, render_template, request, redirect, session, abort
+from flask.ext.basicauth import BasicAuth
 import os
 from pymongo import MongoClient
 from OpenSSL import SSL
 import random
 import string
+
 
 def connect():
     connection = MongoClient("localhost",27017)
@@ -47,12 +49,36 @@ context = SSL.Context(SSL.SSLv23_METHOD)
 context.use_privatekey_file('ast.key')
 context.use_certificate_file('ast.crt')
 
+#some basic authentication
+app.config['BASIC_AUTH_USERNAME'] = 'user'
+app.config['BASIC_AUTH_PASSWORD'] = 'pw'
+basic_auth = BasicAuth(app)
+
+def reporter_auth(key):
+    """This function is called to verify reporter hardware"""
+    return key == 'yoimareporter'
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You are not authenticated', 401,
+    {'WWW-Authenticate': 'Basic realm="Auth Required"'})
+def req_reporter_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not reporter_auth(auth.key):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
 #MAIN ROUTES
 @app.route("/")
 def index():
     return render_template('index.html')
 
 @app.route("/upsert", methods=['GET'])
+@basic_auth.required
 def upsert():
     userinputs = [x for x in handle.trackingdb.find()]
     return render_template('upsert.html', userinputs=userinputs)
@@ -62,6 +88,7 @@ def find():
     return render_template('find.html')
 
 @app.route("/report", methods=['GET'])
+@basic_auth.required
 def report():
     userinputs = [x for x in handle.trackingdb.find()]
     return render_template('report.html', userinputs=userinputs)
@@ -92,6 +119,7 @@ def findreaderread():
 
 #WRITE FUNCTIONS
 @app.route("/upsertwrite", methods=['POST'])
+@basic_auth.required
 def upsertwrite():
     tag1 = {"tagid": request.form.get("tag")}
     query = {"assetid": request.form.get("asset")}
@@ -99,6 +127,7 @@ def upsertwrite():
     return redirect ("/upsert")
 
 @app.route("/reportwrite", methods=['POST'])
+@basic_auth.required
 def reportwrite():
     loc1 = {"readerid": request.form.get('reader')}
     query = {"tagid": request.form.get('tag')}
@@ -106,6 +135,7 @@ def reportwrite():
     return redirect ("/report")
 
 @app.route("/deleteall", methods=['GET'])
+@basic_auth.required
 def deleteall():
     handle.trackingdb.remove()
     return redirect ("/")

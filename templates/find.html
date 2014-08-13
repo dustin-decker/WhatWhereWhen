@@ -22,8 +22,6 @@
 	<input type="text" name="reader" id="reader">
   <input type="submit" value="Find">
  </form>
- 
- <a href="./deleteall">Delete all</a>
 
   {% for query in queries %}
  <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> and database id {{query._id}}</p>
