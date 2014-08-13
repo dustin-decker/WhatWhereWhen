@@ -1,0 +1,34 @@
+<html>
+<head>
+ <title>Demo</title>
+</head>
+<body>
+ <h1>Find Test</h1>
+ 
+ <form action="/findassetread" method="POST">
+	Asset:
+	<input type="text" name="asset" id="asset">
+  <input type="submit" value="Find">
+ </form>
+ 
+  <form action="/findtagread" method="POST">
+	Tag:
+	<input type="text" name="tag" id="tag">
+  <input type="submit" value="Find">
+ </form>
+ 
+  <form action="/findreaderread" method="POST">
+	Location:
+	<input type="text" name="reader" id="reader">
+  <input type="submit" value="Find">
+ </form>
+ 
+ <a href="./deleteall">Delete all</a>
+
+  {% for query in queries %}
+ <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> and database id {{query._id}}</p>
+ {% endfor %}
+ 
+	<br><a href="/">Index</a><br>
+
+</html>

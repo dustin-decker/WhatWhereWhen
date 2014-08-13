@@ -1,0 +1,23 @@
+<html>
+<head>
+ <title>Demo</title>
+</head>
+<body>
+ <h1>Test Upserting</h1>
+ <form action="/upsertwrite" method="POST">
+	Asset:
+	<input type="text" name="asset" id="asset">
+	Tag:
+	<input type="text" name="tag" id="tag">
+  <input type="submit" value="Insert">
+ </form>
+ <a href="./deleteall">Delete all</a>
+
+  {% for userinput in userinputs %}
+ <!--<p>'{{userinput.assetid}}' has database id {{userinput._id}}</p>-->
+ <p><b>{{userinput.assetid}}</b> has tag id <b>{{userinput.tagid}}</b> and is in location: <b>{{userinput.readerid}}</b></p>
+ {% endfor %}
+
+	<br><a href="/">Index</a><br>
+	
+</html>
