@@ -1,14 +1,18 @@
 #-------------------------------------------------------------------------------
-# Name:        module1
-# Purpose:
+# Name:        api
+# Purpose:     api for asset tracking
 #
 # Author:      a
-#
+
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 from flask import Flask, render_template, request, redirect
 import os
 from pymongo import MongoClient
+from OpenSSL import SSL
+context = SSL.Context(SSL.SSLv23_METHOD)
+context.use_privatekey_file('ast.key')
+context.use_certificate_file('ast.crt')
 
 def connect():
     connection = MongoClient("localhost",27017)
@@ -65,22 +69,16 @@ def findreaderread():
 #WRITE FUNCTIONS
 @app.route("/upsertwrite", methods=['POST'])
 def upsertwrite():
-    form1 = {
-            "assetid": request.form.get("asset"),
-            "tagid": request.form.get("tag")
-            }
+    tag1 = {"tagid": request.form.get("tag")}
     query = {"assetid": request.form.get("asset")}
-    assetid = handle.trackingdb.update(query,{'$set': form1},**{'upsert':True})
+    assetid = handle.trackingdb.update(query,{"$set": tag1},**{'upsert':True})
     return redirect ("/upsert")
 
 @app.route("/reportwrite", methods=['POST'])
 def reportwrite():
-    form1 = {
-            "tagid": request.form.get("tag"),
-            "readerid": request.form.get("reader")
-            }
-    query = {"tagid": request.form.get("tag")}
-    assetid = handle.trackingdb.update(query,{"$set": form1},**{'upsert':True})
+    loc1 = {"readerid": request.form.get('reader')}
+    query = {"tagid": request.form.get('tag')}
+    assetid = handle.trackingdb.update(query,{"$set": loc1},**{'upsert':True})
     return redirect ("/report")
 
 @app.route("/deleteall", methods=['GET'])
@@ -90,4 +88,4 @@ def deleteall():
 
 # Remove the "debug=True" for production
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='localhost',debug=True,port=5000,ssl_context=context)
