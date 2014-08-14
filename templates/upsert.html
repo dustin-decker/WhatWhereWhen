@@ -9,6 +9,8 @@
 	<input type="text" name="asset" id="asset">
 	Tag:
 	<input type="text" name="tag" id="tag">
+	<!--blank fields--> 
+	<input type="hidden" name="reader" id="reader" value="">
 	<!--generate our csrf token--> 
 	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
   <input type="submit" value="Insert">

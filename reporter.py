@@ -18,7 +18,7 @@ def main():
     client = requests.session(config={'verbose': sys.stderr}, verify=False, \
             auth=('user', 'pw'))
     csrftoken = getcsrftoken(client) #get session token
-    payload = {'tag': 'tag1', 'reader': 'shelf1'} #information to upsert
+    payload = {'tag': 'tag1', 'reader': 'gone'} #information to upsert
     payload.update(csrftoken) #append csrftoken dictionary to payload
     #post the payload to the api
     r = client.post("https://localhost:5000/reportwrite", data=payload, \

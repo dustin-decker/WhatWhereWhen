@@ -8,23 +8,29 @@
  <form action="/findassetread" method="POST">
 	Asset:
 	<input type="text" name="asset" id="asset">
-  <input type="submit" value="Find">
+	<!--generate our csrf token--> 
+	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+	<input type="submit" value="Find">
  </form>
  
   <form action="/findtagread" method="POST">
 	Tag:
 	<input type="text" name="tag" id="tag">
-  <input type="submit" value="Find">
+	<!--generate our csrf token--> 
+	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+	<input type="submit" value="Find">
  </form>
  
   <form action="/findreaderread" method="POST">
 	Location:
 	<input type="text" name="reader" id="reader">
-  <input type="submit" value="Find">
+	<!--generate our csrf token--> 
+	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+	<input type="submit" value="Find">
  </form>
 
   {% for query in queries %}
- <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> and database id {{query._id}}</p>
+ <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> and is located at <b>{{query.readerid}}</b></p>
  {% endfor %}
  
 	<br><a href="/">Index</a><br>

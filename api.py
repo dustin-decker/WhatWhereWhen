@@ -14,7 +14,7 @@ from OpenSSL import SSL
 import random
 import string
 
-
+#MongoDB settings
 def connect():
     connection = MongoClient("localhost",27017)
     handle = connection["apitest1"]
@@ -121,7 +121,12 @@ def findreaderread():
 @app.route("/upsertwrite", methods=['POST'])
 @basic_auth.required
 def upsertwrite():
-    tag1 = {"tagid": request.form.get("tag")}
+    tag1 = {"tagid": request.form.get("tag"), \
+            "readerid": request.form.get("reader"),\
+            "readerid2": request.form.get("reader"),\
+            "readerid3": request.form.get("reader"),\
+            "readerid4": request.form.get("reader"),\
+            "readerid5": request.form.get("reader")}
     query = {"assetid": request.form.get("asset")}
     assetid = handle.trackingdb.update(query,{"$set": tag1},**{'upsert':True})
     return redirect ("/upsert")
@@ -129,9 +134,24 @@ def upsertwrite():
 @app.route("/reportwrite", methods=['POST'])
 @basic_auth.required
 def reportwrite():
-    loc1 = {"readerid": request.form.get('reader')}
+    location = request.form.get('reader')
     query = {"tagid": request.form.get('tag')}
-    assetid = handle.trackingdb.update(query,{"$set": loc1},**{'upsert':True})
+    retrieve = handle.trackingdb.find_one(query)
+
+    def replace_value(key_to_find, value):
+        for key in retrieve.keys():
+            if key == key_to_find:
+                retrieve[key] = value
+
+    if location != retrieve.get("readerid", ""):
+        replace_value("readerid5", retrieve.get("readerid4", ""))
+        replace_value("readerid4", retrieve.get("readerid3", ""))
+        replace_value("readerid3", retrieve.get("readerid2", ""))
+        replace_value("readerid2", retrieve.get("readerid", ""))
+        replace_value("readerid", location)
+
+        assetid = handle.trackingdb.update({},retrieve)
+
     return redirect ("/report")
 
 @app.route("/deleteall", methods=['GET'])
