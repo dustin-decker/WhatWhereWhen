@@ -13,6 +13,7 @@ from pymongo import MongoClient
 from OpenSSL import SSL
 import random
 import string
+import datetime
 
 #MongoDB settings
 def connect():
@@ -122,12 +123,21 @@ def findreaderread():
 @basic_auth.required
 def upsertwrite():
     tag1 = {"tagid": request.form.get("tag"), \
+            #create empty keys from the hidden value
+            #in the form:
             "readerid": request.form.get("reader"),\
             "readerid2": request.form.get("reader"),\
             "readerid3": request.form.get("reader"),\
             "readerid4": request.form.get("reader"),\
-            "readerid5": request.form.get("reader")}
+            "readerid5": request.form.get("reader"),\
+            "timestamp": request.form.get("timestamp"),\
+            "timestamp2": request.form.get("timestamp"),\
+            "timestamp3": request.form.get("timestamp"),\
+            "timestamp4": request.form.get("timestamp"),\
+            "timestamp5": request.form.get("timestamp"),\
+            }
     query = {"assetid": request.form.get("asset")}
+    #upsert the new record
     assetid = handle.trackingdb.update(query,{"$set": tag1},**{'upsert':True})
     return redirect ("/upsert")
 
@@ -136,20 +146,31 @@ def upsertwrite():
 def reportwrite():
     location = request.form.get('reader')
     query = {"tagid": request.form.get('tag')}
+    #get document as dictionary:
     retrieve = handle.trackingdb.find_one(query)
+    #get the current date and time
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
     def replace_value(key_to_find, value):
+        """replaces value of specified key in a dict"""
         for key in retrieve.keys():
             if key == key_to_find:
                 retrieve[key] = value
 
+    #if the location has changed...:
     if location != retrieve.get("readerid", ""):
+        #shift all of the key values and insert the new one
         replace_value("readerid5", retrieve.get("readerid4", ""))
         replace_value("readerid4", retrieve.get("readerid3", ""))
         replace_value("readerid3", retrieve.get("readerid2", ""))
         replace_value("readerid2", retrieve.get("readerid", ""))
         replace_value("readerid", location)
-
+        replace_value("timestamp5", retrieve.get("timestamp4", ""))
+        replace_value("timestamp4", retrieve.get("timestamp3", ""))
+        replace_value("timestamp3", retrieve.get("timestamp2", ""))
+        replace_value("timestamp2", retrieve.get("timestamp", ""))
+        replace_value("timestamp", timestamp)
+        #update the document
         assetid = handle.trackingdb.update({},retrieve)
 
     return redirect ("/report")

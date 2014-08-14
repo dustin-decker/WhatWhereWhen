@@ -30,7 +30,8 @@
  </form>
 
   {% for query in queries %}
- <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> and is located at <b>{{query.readerid}}</b></p>
+ <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> 
+ and is located at <b>{{query.readerid}}</b> as of <b>{{userinput.timestamp}}</b></p>
  {% endfor %}
  
 	<br><a href="/">Index</a><br>

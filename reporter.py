@@ -12,13 +12,17 @@ from bs4 import BeautifulSoup
 import sys
 import json
 
-def main():
+def report():
+    postit("tag1", "location1")
+
+
+def postit(tag, location):
     #change verifiy to True if using valid certs
     #opens a session so we have the same token for our two requests
     client = requests.session(config={'verbose': sys.stderr}, verify=False, \
             auth=('user', 'pw'))
     csrftoken = getcsrftoken(client) #get session token
-    payload = {'tag': 'tag1', 'reader': 'gone'} #information to upsert
+    payload = {'tag': tag, 'reader': location} #information to upsert
     payload.update(csrftoken) #append csrftoken dictionary to payload
     #post the payload to the api
     r = client.post("https://localhost:5000/reportwrite", data=payload, \
@@ -36,4 +40,4 @@ def getcsrftoken(client):
 
 
 if __name__ == '__main__':
-    main()
+    report()

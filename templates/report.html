@@ -17,7 +17,8 @@
 
   {% for userinput in userinputs %}
  <!--<p>'{{userinput.assetid}}' has database id {{userinput._id}}</p>-->
- <p><b>{{userinput.assetid}}</b> has tag id <b>{{userinput.tagid}}</b> and is in location: <b>{{userinput.readerid}}</b></p>
+ <p><b>{{userinput.assetid}}</b> has tag id <b>{{userinput.tagid}}</b> 
+ and is in location: <b>{{userinput.readerid}}</b> as of <b>{{userinput.timestamp}}</b></p>
  {% endfor %}
  
   <br><a href="/">Index</a><br>
