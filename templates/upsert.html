@@ -4,6 +4,15 @@
 </head>
 <body>
  <h1>Test Upserting</h1>
+ 
+ <ul>
+    {% for item in nav.top %}
+    <li class="{{ 'current' if item.is_active else '' }}">
+        <a href="{{ item.url }}">{{ item.label }}</a>
+    </li>
+    {% endfor %}
+ </ul>
+
  <form action="/upsertwrite" method="POST">
 	Asset:
 	<input type="text" name="asset" id="asset">

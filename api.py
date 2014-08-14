@@ -8,6 +8,7 @@
 #-------------------------------------------------------------------------------
 from flask import Flask, render_template, request, redirect, session, abort
 from flask.ext.basicauth import BasicAuth
+from flask.ext.navigation import Navigation
 import os
 from pymongo import MongoClient
 from OpenSSL import SSL
@@ -25,6 +26,8 @@ def connect():
 app = Flask(__name__)
 app.secret_key = 'why would I tell you my secret key?'
 handle = connect()
+toolbar = DebugToolbarExtension(app)
+nav = Navigation(app)
 
 #SOME SECURITY
 
@@ -74,6 +77,13 @@ def req_reporter_auth(f):
     return decorated
 
 #MAIN ROUTES
+navbar_top = nav.Bar('top', [
+    nav.Item('Index', 'index'),
+    nav.Item('Upsert', 'upsert'),
+    nav.Item('Find', 'find'),
+    nav.Item('Report', 'report'),
+])
+
 @app.route("/")
 def index():
     return render_template('index.html')

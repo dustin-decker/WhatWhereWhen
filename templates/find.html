@@ -5,6 +5,14 @@
 <body>
  <h1>Find Test</h1>
  
+ <ul>
+    {% for item in nav.top %}
+    <li class="{{ 'current' if item.is_active else '' }}">
+        <a href="{{ item.url }}">{{ item.label }}</a>
+    </li>
+    {% endfor %}
+ </ul>
+
  <form action="/findassetread" method="POST">
 	Asset:
 	<input type="text" name="asset" id="asset">
