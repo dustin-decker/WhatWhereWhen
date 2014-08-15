@@ -1,21 +1,26 @@
 <html>
 <head>
- <title>Demo</title>
+ <title>Asset Tracking</title>
+ <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
 </head>
 <body>
- <h1>Test</h1>
+ <h1>Asset Tracking</h1>
  
+ <div id="navmenu">
  <ul>
     {% for item in nav.top %}
     <li class="{{ 'current' if item.is_active else '' }}">
         <a href="{{ item.url }}">{{ item.label }}</a>
     </li>
     {% endfor %}
-</ul>
+ </ul>
+ </div>
+ <br>
+ <hr>
 
  <!--generate our csrf token for reporters to retrieve--> 
  <form>
- <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
  </form>
 
 </html>

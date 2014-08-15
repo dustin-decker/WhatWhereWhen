@@ -22,11 +22,10 @@ def connect():
     handle = connection["apitest1"]
     handle.authenticate("user","pw")
     return handle
+handle = connect()
 
 app = Flask(__name__)
 app.secret_key = 'why would I tell you my secret key?'
-handle = connect()
-toolbar = DebugToolbarExtension(app)
 nav = Navigation(app)
 
 #SOME SECURITY
@@ -58,24 +57,6 @@ app.config['BASIC_AUTH_USERNAME'] = 'user'
 app.config['BASIC_AUTH_PASSWORD'] = 'pw'
 basic_auth = BasicAuth(app)
 
-def reporter_auth(key):
-    """This function is called to verify reporter hardware"""
-    return key == 'yoimareporter'
-def authenticate():
-    """Sends a 401 response that enables basic auth"""
-    return Response(
-    'Could not verify your access level for that URL.\n'
-    'You are not authenticated', 401,
-    {'WWW-Authenticate': 'Basic realm="Auth Required"'})
-def req_reporter_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not reporter_auth(auth.key):
-            return authenticate()
-        return f(*args, **kwargs)
-    return decorated
-
 #MAIN ROUTES
 navbar_top = nav.Bar('top', [
     nav.Item('Index', 'index'),
@@ -91,7 +72,7 @@ def index():
 @app.route("/upsert", methods=['GET'])
 @basic_auth.required
 def upsert():
-    userinputs = [x for x in handle.trackingdb.find()]
+    userinputs = [x for x in handle.trackingdb.find().sort("_id",-1).limit(25)]
     return render_template('upsert.html', userinputs=userinputs)
 
 @app.route("/find", methods=['GET'])
@@ -101,7 +82,7 @@ def find():
 @app.route("/report", methods=['GET'])
 @basic_auth.required
 def report():
-    userinputs = [x for x in handle.trackingdb.find()]
+    userinputs = [x for x in handle.trackingdb.find().sort("_id",-1).limit(25)]
     return render_template('report.html', userinputs=userinputs)
 
 @app.route("/findassetread", methods=['POST'])
@@ -123,7 +104,7 @@ def findtagread():
 @app.route("/findreaderread", methods=['POST'])
 def findreaderread():
     form1 = {
-            "readerid": request.form.get("reader")
+            "locationid": request.form.get("location")
             }
     queries = handle.trackingdb.find(form1)
     return render_template('find.html', queries=queries)
@@ -132,29 +113,32 @@ def findreaderread():
 @app.route("/upsertwrite", methods=['POST'])
 @basic_auth.required
 def upsertwrite():
-    tag1 = {"tagid": request.form.get("tag"), \
-            #create empty keys from the hidden value
-            #in the form:
-            "readerid": request.form.get("reader"),\
-            "readerid2": request.form.get("reader"),\
-            "readerid3": request.form.get("reader"),\
-            "readerid4": request.form.get("reader"),\
-            "readerid5": request.form.get("reader"),\
-            "timestamp": request.form.get("timestamp"),\
-            "timestamp2": request.form.get("timestamp"),\
-            "timestamp3": request.form.get("timestamp"),\
-            "timestamp4": request.form.get("timestamp"),\
-            "timestamp5": request.form.get("timestamp"),\
+    """New record function"""
+    blank = ""
+    fields = {"tagid": request.form.get("tag"), \
+            #create empty keys from the hidden value in the form:
+            "locationid": blank,\
+            "locationid2": blank,\
+            "locationid3": blank,\
+            "locationid4": blank,\
+            "locationid5": blank,\
+            "timestamp": blank,\
+            "timestamp2": blank,\
+            "timestamp3": blank,\
+            "timestamp4": blank,\
+            "timestamp5": blank,\
             }
+
     query = {"assetid": request.form.get("asset")}
     #upsert the new record
-    assetid = handle.trackingdb.update(query,{"$set": tag1},**{'upsert':True})
+    assetid = handle.trackingdb.update(query,{"$set": fields},**{'upsert':True})
     return redirect ("/upsert")
 
 @app.route("/reportwrite", methods=['POST'])
 @basic_auth.required
 def reportwrite():
-    location = request.form.get('reader')
+    """Location reporting function"""
+    location = request.form.get('location')
     query = {"tagid": request.form.get('tag')}
     #get document as dictionary:
     retrieve = handle.trackingdb.find_one(query)
@@ -168,20 +152,22 @@ def reportwrite():
                 retrieve[key] = value
 
     #if the location has changed...:
-    if location != retrieve.get("readerid", ""):
+    if location != retrieve.get("locationid", ""):
         #shift all of the key values and insert the new one
-        replace_value("readerid5", retrieve.get("readerid4", ""))
-        replace_value("readerid4", retrieve.get("readerid3", ""))
-        replace_value("readerid3", retrieve.get("readerid2", ""))
-        replace_value("readerid2", retrieve.get("readerid", ""))
-        replace_value("readerid", location)
+        replace_value("locationid5", retrieve.get("locationid4", ""))
+        replace_value("locationid4", retrieve.get("locationid3", ""))
+        replace_value("locationid3", retrieve.get("locationid2", ""))
+        replace_value("locationid2", retrieve.get("locationid", ""))
+        replace_value("locationid", location)
         replace_value("timestamp5", retrieve.get("timestamp4", ""))
         replace_value("timestamp4", retrieve.get("timestamp3", ""))
         replace_value("timestamp3", retrieve.get("timestamp2", ""))
         replace_value("timestamp2", retrieve.get("timestamp", ""))
         replace_value("timestamp", timestamp)
+        objid = retrieve.pop("_id", None)
         #update the document
-        assetid = handle.trackingdb.update({},retrieve)
+        assetid = handle.trackingdb.update({'_id':objid},{"$set": retrieve},\
+                    **{'upsert':True})
 
     return redirect ("/report")
 

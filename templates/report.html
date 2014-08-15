@@ -1,10 +1,12 @@
 <html>
 <head>
- <title>Demo</title>
+ <title>Asset Tracking</title>
+ <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
 </head>
 <body>
- <h1>Test Location Reporting</h1>
+ <h1>Asset Tracking</h1>
  
+ <div id="navmenu">
  <ul>
     {% for item in nav.top %}
     <li class="{{ 'current' if item.is_active else '' }}">
@@ -12,24 +14,38 @@
     </li>
     {% endfor %}
  </ul>
+ </div>
+ <br>
+ <hr>
 
  <form action="/reportwrite" method="POST">
 	Tag:
 	<input type="text" name="tag" id="tag">
 	Location:
-	<input type="text" name="reader" id="reader">
+	<input type="text" name="location" id="location">
 	 <!--generate our csrf token--> 
 	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-  <input type="submit" value="Insert">
+	<input type="submit" value="Insert">
  </form>
- <a href="./deleteall">Delete all</a>
+ <hr>
 
-  {% for userinput in userinputs %}
- <!--<p>'{{userinput.assetid}}' has database id {{userinput._id}}</p>-->
- <p><b>{{userinput.assetid}}</b> has tag id <b>{{userinput.tagid}}</b> 
- and is in location: <b>{{userinput.readerid}}</b> as of <b>{{userinput.timestamp}}</b></p>
- {% endfor %}
- 
-  <br><a href="/">Index</a><br>
+ <table>
+	<tr>
+		<th>Asset</th>
+		<th>Tag</th> 
+		<th>Location</th>
+		<th>Time</th>
+	</tr>
+	{% for userinput in userinputs %}
+	<tr>
+        <td> {{userinput.assetid}} </td>
+		<td> {{userinput.tagid}} </td>
+		<td> {{userinput.locationid}} </td>
+		<td> {{userinput.timestamp}} </td>
+	</tr>
+	{% endfor %}
+ </table>
+
+ <br><a href="./deleteall">Delete all</a>
 
 </html>

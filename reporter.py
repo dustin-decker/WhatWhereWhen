@@ -13,7 +13,7 @@ import sys
 import json
 
 def report():
-    postit("tag1", "location1")
+    postit("tag2", "<script>")
 
 
 def postit(tag, location):
@@ -22,7 +22,7 @@ def postit(tag, location):
     client = requests.session(config={'verbose': sys.stderr}, verify=False, \
             auth=('user', 'pw'))
     csrftoken = getcsrftoken(client) #get session token
-    payload = {'tag': tag, 'reader': location} #information to upsert
+    payload = {'tag': tag, 'location': location} #information to upsert
     payload.update(csrftoken) #append csrftoken dictionary to payload
     #post the payload to the api
     r = client.post("https://localhost:5000/reportwrite", data=payload, \

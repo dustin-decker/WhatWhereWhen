@@ -1,0 +1,216 @@
+@charset "utf-8";
+
+html {
+	height: 100%;
+	margin-bottom: 1px;
+	}
+
+body {
+	margin-top: 0;
+	padding: 0;
+	font-family: Verdana, "Bitstream Vera Sans", sans-serif;
+	line-height: 1.8em;
+	color: #fff;
+	text-align: left;
+	min-width: 760px;
+	background-color: #4a525a; /* dark blue slate thing */
+	}
+
+a {
+	text-decoration: none;
+	}
+
+a:link {
+	text-decoration: none;
+	color: #ddd;
+	border-color: #888;
+	border-width: 0 0 1px 0;
+	border-style: none none solid none;
+	padding: 3px 0px 2px 0px;
+	background-color: inherit;
+	}
+
+a:visited {
+	color: #ddd;
+	border-color: #999;
+	border-width: 0 0 1px 0;
+	border-style: none none dotted none;
+	padding: 3px 0px 2px 0px;
+	background-color: inherit;
+	}
+
+a:hover {
+	color: white;
+	text-decoration: none;
+	background-color: #606870;
+	border-color: #606870;
+	}
+
+p {
+ 	margin: 0 0 1.6em 0;
+	padding: 0;
+	}
+
+h1 {
+	font-family: "Gill Sans", "Gill Sans Std", "Gill Sans MT", Georgia, serif;
+	font-size: 1.55em; /* was 1.46em for Georgia */
+	line-height: 1.5em;
+	text-align: left;
+	font-weight: normal;
+	margin: 0em 0px 1.25em 0px;
+	}
+
+h2 {
+	font-family: "Gill Sans", "Gill Sans Std", "Gill Sans MT", Verdana, "Bitstream Vera Sans", sans-serif;
+	font-size: 1.1em; /* 1 */
+	text-align: left;
+	font-weight: normal;
+	line-height: 1.8em;
+	letter-spacing: .2em;
+	margin: 4em 0 1em 0;
+	text-transform: uppercase;
+	}
+
+h1 + h2 {
+	margin-top: 2em;
+	}
+h2 + h3 {
+	margin-top: 1.5em;
+	}
+
+h3 {
+	font-family: "Gill Sans", "Gill Sans Std", "Gill Sans MT", Verdana, "Bitstream Vera Sans", sans-serif;
+	font-size: .91em;
+	text-align: left;
+	font-weight: normal;
+	line-height: 1.8em;
+	letter-spacing: .2em;
+	margin-bottom: 1.4em;
+	margin-top: 3em;
+	text-transform: uppercase;
+	}
+
+
+p + h3 {
+	margin-top: 4em;
+	}
+pre + h3 {
+	margin-top: 4em;
+	}
+
+h6 + h2 {
+	margin-top: 2em;
+	}
+
+
+h4, h5, h6 {
+	font-family: Verdana, "Bitstream Vera Sans", sans-serif;
+	font-size: 1em;
+	text-align: left;
+	font-weight: bold;
+	line-height: 1.8em;
+	margin: 2em 0 0 0;
+	}
+
+strong {
+	font-weight: normal;
+	font-size: .91em;
+	letter-spacing: .2em;
+	text-transform: uppercase;
+	}
+
+em em {
+	font-style: normal;
+	}
+
+strong strong {
+	font-weight: bold;
+	}
+
+cite {
+	font-weight: normal;
+	font-style: italic;
+	}
+
+img {
+	margin-top: 5px;
+	}
+
+thead {
+	font-weight: bold;
+	}
+
+
+ul, ol {
+	padding-left: 1.25em;
+	margin: 0 0 2em 1em;
+	}
+
+
+pre {
+	font-family: "Bitstream Vera Sans Mono", Courier, Monaco, ProFont, "American Typewriter", "Andale Mono", monospace;
+	line-height: 1.45em;
+	color: #eee;
+	background-color: inherit;
+	margin: 2em 0 2.5em 0;
+	padding: 5px 0 5px 10px;
+	border-width: 1px 0 1px 0;
+	border-color: #6b6b6b;
+	border-style: dashed;
+	}
+
+ul {
+	list-style-type: square;
+	}
+
+ul ul {
+	list-style-type: square;
+	}
+ul ul ul {
+	list-style-type: square;
+	}
+
+hr {
+	height: 1px;
+	margin: 2em 1em 1em 0;
+	text-align: center;
+	border-color: #777;
+	border-width: 0;
+	border-style: dotted;
+	}
+
+input, select  {
+	font-size: 1em;
+	}
+input[type="text"], input[type="password"]   { background-color: #ddd; }
+/*
+input[type="submit"] { background-color: #ccc;  border-width: 1px; }
+*/
+select { background-color: #ddd; }
+
+th {
+  background-color:#000;
+  color: #fff; 
+}
+
+tr:nth-of-type(odd) {
+  background-color:#ccc;
+  color: #000; 
+}
+
+tr:nth-of-type(even) {
+  color: #000; 
+}
+
+td {
+    padding: 5px;
+}
+
+#navmenu ul {margin: 0; padding: 0; 
+	list-style-type: none; list-style-image: none; }
+#navmenu li {display: inline; }
+#navmenu ul li a {text-decoration:none;  margin: 4px;
+	padding: 5px 20px 5px 20px; color: white;
+	background: black;}
+#navmenu ul li a:hover {color: black;
+	background: #ccc; }

@@ -1,9 +1,0 @@
-install openssl-win32
-
-C:\> \path\to\vcvarsall.bat x86_amd64
-C:\> set LIB=C:\OpenSSL-Win32\lib\VC\static;C:\OpenSSL-Win32\lib;%LIB%
-C:\> set INCLUDE=C:\OpenSSL-Win32\include;%INCLUDE%
-C:\> pip install cryptography
-
-
-then pyopenssl

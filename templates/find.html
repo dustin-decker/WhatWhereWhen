@@ -1,10 +1,12 @@
 <html>
 <head>
- <title>Demo</title>
+ <title>Asset Tracking</title>
+ <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
 </head>
 <body>
- <h1>Find Test</h1>
+ <h1>Asset Tracking</h1>
  
+ <div id="navmenu">
  <ul>
     {% for item in nav.top %}
     <li class="{{ 'current' if item.is_active else '' }}">
@@ -12,6 +14,9 @@
     </li>
     {% endfor %}
  </ul>
+ </div>
+ <br>
+ <hr>
 
  <form action="/findassetread" method="POST">
 	Asset:
@@ -21,7 +26,7 @@
 	<input type="submit" value="Find">
  </form>
  
-  <form action="/findtagread" method="POST">
+ <form action="/findtagread" method="POST">
 	Tag:
 	<input type="text" name="tag" id="tag">
 	<!--generate our csrf token--> 
@@ -29,19 +34,30 @@
 	<input type="submit" value="Find">
  </form>
  
-  <form action="/findreaderread" method="POST">
+ <form action="/findreaderread" method="POST">
 	Location:
 	<input type="text" name="reader" id="reader">
 	<!--generate our csrf token--> 
 	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 	<input type="submit" value="Find">
  </form>
+ <hr>
 
-  {% for query in queries %}
- <p><b>{{query.assetid}}</b> has tag id <b>{{query.tagid}}</b> 
- and is located at <b>{{query.readerid}}</b> as of <b>{{userinput.timestamp}}</b></p>
- {% endfor %}
- 
-	<br><a href="/">Index</a><br>
+ <table>
+	<tr>
+		<th>Asset</th>
+		<th>Tag</th> 
+		<th>Location</th>
+		<th>Time</th>
+	</tr>
+	{% for query in queries %}
+	<tr>
+        <td> {{query.assetid}} </td>
+		<td> {{query.tagid}} </td>
+		<td> {{query.locationid}} </td>
+		<td> {{query.timestamp}} </td>
+	</tr>
+	{% endfor %}
+ </table>
 
 </html>
