@@ -26,7 +26,7 @@ def connect():
 handle = connect()
 
 app = Flask(__name__)
-app.secret_key = 'why would I tell dfgdfgyou my secret key?'
+app.secret_key = 'why would I tell you my secret key?'
 nav = Navigation(app)
 
 #SOME SECURITY
@@ -57,12 +57,6 @@ def frame_buster(response):
     headers['X-Frame-Options'] = 'DENY'
     #forces XSS filter built into recent web browsers
     headers['X-XSS-Protection'] = '1'
-    if ctx.request_json and not ctx.forbidden:
-        #this all prevents JSON hijacking
-        #declares json as JSON MIME type
-        headers['Content-Type'] = 'application/json; charset=utf-8'
-        #prevents browsers from sniffing MIME type other than the declared
-        headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
 #for SSL
@@ -157,10 +151,7 @@ def upsertwrite():
 def reportwrite():
     """Location reporting function"""
     location = request.form.get('location')
-    try:
-        query = {"tagid": request.form.get('tag')}
-    except:
-        return redirect ("/report")
+    query = {"tagid": request.form.get('tag')}
     #get document as dictionary:
     retrieve = handle.trackingdb.find_one(query)
     #get the current date and time
@@ -173,22 +164,25 @@ def reportwrite():
                 retrieve[key] = value
 
     #if the location has changed...:
-    if location != retrieve.get("locationid", ""):
-        #shift all of the key values and insert the new one
-        replace_value("locationid5", retrieve.get("locationid4", ""))
-        replace_value("locationid4", retrieve.get("locationid3", ""))
-        replace_value("locationid3", retrieve.get("locationid2", ""))
-        replace_value("locationid2", retrieve.get("locationid", ""))
-        replace_value("locationid", location)
-        replace_value("timestamp5", retrieve.get("timestamp4", ""))
-        replace_value("timestamp4", retrieve.get("timestamp3", ""))
-        replace_value("timestamp3", retrieve.get("timestamp2", ""))
-        replace_value("timestamp2", retrieve.get("timestamp", ""))
-        replace_value("timestamp", timestamp)
-        objid = retrieve.pop("_id", None)
-        #update the document
-        assetid = handle.trackingdb.update({'_id':objid},{"$set": retrieve},\
-                    **{'upsert':True})
+    try:
+        if location != retrieve.get("locationid", ""):
+            #shift all of the key values and insert the new one
+            replace_value("locationid5", retrieve.get("locationid4", ""))
+            replace_value("locationid4", retrieve.get("locationid3", ""))
+            replace_value("locationid3", retrieve.get("locationid2", ""))
+            replace_value("locationid2", retrieve.get("locationid", ""))
+            replace_value("locationid", location)
+            replace_value("timestamp5", retrieve.get("timestamp4", ""))
+            replace_value("timestamp4", retrieve.get("timestamp3", ""))
+            replace_value("timestamp3", retrieve.get("timestamp2", ""))
+            replace_value("timestamp2", retrieve.get("timestamp", ""))
+            replace_value("timestamp", timestamp)
+            objid = retrieve.pop("_id", None)
+            #update the document
+            assetid = handle.trackingdb.update({'_id':objid},{"$set": retrieve},\
+                        **{'upsert':True})
+    except:
+        return redirect ("/report")
 
     return redirect ("/report")
 
@@ -200,5 +194,5 @@ def deleteall():
 
 # Remove the "debug=True" for production
 if __name__ == '__main__':
-    #app.run(debug=True,port=5000,ssl_context=context,host= 'localhost')
-    app.run(debug=False,port=5000,ssl_context=context,host= '0.0.0.0')
+    app.run(debug=True,port=5000,ssl_context=context,host= 'localhost')
+    #app.run(debug=False,port=5000,ssl_context=context,host= '0.0.0.0')

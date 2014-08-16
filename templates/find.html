@@ -36,7 +36,7 @@
  
  <form action="/findreaderread" method="POST">
 	Location:
-	<input type="text" name="reader" id="reader">
+	<input type="text" name="location" id="location">
 	<!--generate our csrf token--> 
 	<input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 	<input type="submit" value="Find">
