@@ -159,47 +159,44 @@ pre {
 	border-style: dashed;
 	}
 
-ul {
-	list-style-type: square;
-	}
-
-ul ul {
-	list-style-type: square;
-	}
-ul ul ul {
-	list-style-type: square;
-	}
-
 hr {
 	height: 1px;
-	margin: 2em 1em 1em 0;
+	margin: 1em 1em 1em 0;
 	text-align: center;
-	border-color: #777;
+	border-color: #000;
 	border-width: 0;
 	border-style: dotted;
 	}
 
 input, select  {
 	font-size: 1em;
+	background-color: #ccc;
+	border-width: 1px;
 	}
-input[type="text"], input[type="password"]   { background-color: #ddd; }
-/*
-input[type="submit"] { background-color: #ccc;  border-width: 1px; }
-*/
-select { background-color: #ddd; }
+	
+table {
+    width: 100%;
+	table-layout:fixed;
+}
+
+table td > div {
+    overflow: hidden;
+    height: 1.2em;
+}
 
 th {
-  background-color:#000;
-  color: #fff; 
+	background-color:#000;
+	color: #fff; 
 }
 
 tr:nth-of-type(odd) {
-  background-color:#ccc;
-  color: #000; 
+	background-color:#ccc;
+	color: #000; 
 }
 
 tr:nth-of-type(even) {
-  color: #000; 
+	background-color:#808080;
+	color: #000; 
 }
 
 td {

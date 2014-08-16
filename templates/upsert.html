@@ -38,10 +38,10 @@
 	</tr>
 	{% for userinput in userinputs %}
 	<tr>
-        <td> {{userinput.assetid}} </td>
-		<td> {{userinput.tagid}} </td>
-		<td> {{userinput.locationid}} </td>
-		<td> {{userinput.timestamp}} </td>
+        <td style="max-width:35%;"><div> {{userinput.assetid}} </div></td>
+		<td style="max-width:25%;"><div> {{userinput.tagid}} </div></td>
+		<td style="max-width:25%;"><div> {{userinput.locationid}} </div></td>
+		<td style="max-width:15%;"><div> {{userinput.timestamp}} </div></td>
 	</tr>
 	{% endfor %}
  </table>

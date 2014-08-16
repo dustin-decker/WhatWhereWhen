@@ -52,10 +52,10 @@
 	</tr>
 	{% for query in queries %}
 	<tr>
-        <td> {{query.assetid}} </td>
-		<td> {{query.tagid}} </td>
-		<td> {{query.locationid}} </td>
-		<td> {{query.timestamp}} </td>
+        <td style="max-width:35%;"><div> {{query.assetid}} </div></td>
+		<td style="max-width:25%;"><div> {{query.tagid}} </div></td>
+		<td style="max-width:25%;"><div> {{query.locationid}} </div></td>
+		<td style="max-width:15%;"><div> {{query.timestamp}} </div></td>
 	</tr>
 	{% endfor %}
  </table>
