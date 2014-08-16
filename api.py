@@ -10,6 +10,7 @@ from flask import Flask, render_template, request, redirect, session, abort, \
                     _request_ctx_stack
 from flask.ext.basicauth import BasicAuth
 from flask.ext.navigation import Navigation
+from flask_limiter import Limiter
 import os
 from pymongo import MongoClient
 from OpenSSL import SSL
@@ -28,6 +29,7 @@ handle = connect()
 app = Flask(__name__)
 app.secret_key = 'why would I tell you my secret key?'
 nav = Navigation(app)
+limiter = Limiter(app)
 
 #SOME SECURITY
 
@@ -83,6 +85,7 @@ def index():
 
 @app.route("/upsert", methods=['GET'])
 @basic_auth.required
+@limiter.limit("100/hour")
 def upsert():
     userinputs = [x for x in handle.trackingdb.find().sort("_id",-1).limit(25)]
     return render_template('upsert.html', userinputs=userinputs)
@@ -98,6 +101,7 @@ def report():
     return render_template('report.html', userinputs=userinputs)
 
 @app.route("/findassetread", methods=['POST'])
+@limiter.limit("75/hour")
 def findassetread():
     form1 = {
             "assetid": request.form.get("asset")
@@ -106,6 +110,7 @@ def findassetread():
     return render_template('find.html', queries=queries)
 
 @app.route("/findtagread", methods=['POST'])
+@limiter.limit("75/hour")
 def findtagread():
     form1 = {
             "tagid": request.form.get("tag")
@@ -114,6 +119,7 @@ def findtagread():
     return render_template('find.html', queries=queries)
 
 @app.route("/findreaderread", methods=['POST'])
+@limiter.limit("75/hour")
 def findreaderread():
     form1 = {
             "locationid": request.form.get("location")
