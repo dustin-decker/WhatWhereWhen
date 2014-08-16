@@ -12,6 +12,9 @@ from bs4 import BeautifulSoup
 import sys
 import json
 
+global serverpath
+#serverpath = "https://localhost:5000"
+serverpath = "https://68.172.220.96:5000"
 
 def report():
 
@@ -32,7 +35,7 @@ def postitreport(tag, location):
     payload = {'tag': tag, 'location': location} #information to upsert
     payload.update(csrftoken) #append csrftoken dictionary to payload
     #post the payload to the api
-    r = client.post("https://localhost:5000/reportwrite", data=payload, \
+    r = client.post(serverpath + "/reportwrite", data=payload, \
     verify=False) #make True for production use with valid certs
     #print(r.text)
 
@@ -45,13 +48,13 @@ def postitupsert(asset, tag):
     payload = {'asset': asset, 'tag': tag} #information to upsert
     payload.update(csrftoken) #append csrftoken dictionary to payload
     #post the payload to the api
-    r = client.post("https://localhost:5000/upsertwrite", data=payload, \
+    r = client.post(serverpath + "/upsertwrite", data=payload, \
     verify=False) #make True for production use with valid certs
     #print(r.text)
 
 def getcsrftoken(client):
     #retrieve page content
-    soup = BeautifulSoup(client.get('https://localhost:5000').content)
+    soup = BeautifulSoup(client.get(serverpath).content)
     #parse page content for CSRF token
     csrftoken = soup.find("input", {"name": "_csrf_token"})["value"]
     tokendict = {} #create empty dictionary

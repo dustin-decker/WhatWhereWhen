@@ -6,7 +6,8 @@
 
 # Licence:     MIT
 #-------------------------------------------------------------------------------
-from flask import Flask, render_template, request, redirect, session, abort
+from flask import Flask, render_template, request, redirect, session, abort, \
+                    _request_ctx_stack
 from flask.ext.basicauth import BasicAuth
 from flask.ext.navigation import Navigation
 import os
@@ -25,7 +26,7 @@ def connect():
 handle = connect()
 
 app = Flask(__name__)
-app.secret_key = 'why would I tell you my secret key?'
+app.secret_key = 'why would I tell dfgdfgyou my secret key?'
 nav = Navigation(app)
 
 #SOME SECURITY
@@ -42,10 +43,27 @@ def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = \
         ''.join(random.choice(string.ascii_uppercase + string.digits) \
-        for _ in range(10))
+        for _ in range(24))
     return session['_csrf_token']
 
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
+#for Clickjacking and some other stuff
+@app.after_request
+def frame_buster(response):
+    ctx = _request_ctx_stack.top
+    headers = response.headers
+    #prevent clickjacking
+    headers['X-Frame-Options'] = 'DENY'
+    #forces XSS filter built into recent web browsers
+    headers['X-XSS-Protection'] = '1'
+    if ctx.request_json and not ctx.forbidden:
+        #this all prevents JSON hijacking
+        #declares json as JSON MIME type
+        headers['Content-Type'] = 'application/json; charset=utf-8'
+        #prevents browsers from sniffing MIME type other than the declared
+        headers['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 #for SSL
 context = SSL.Context(SSL.SSLv23_METHOD)
@@ -139,7 +157,10 @@ def upsertwrite():
 def reportwrite():
     """Location reporting function"""
     location = request.form.get('location')
-    query = {"tagid": request.form.get('tag')}
+    try:
+        query = {"tagid": request.form.get('tag')}
+    except:
+        return redirect ("/report")
     #get document as dictionary:
     retrieve = handle.trackingdb.find_one(query)
     #get the current date and time
@@ -179,4 +200,5 @@ def deleteall():
 
 # Remove the "debug=True" for production
 if __name__ == '__main__':
-    app.run(host='localhost',debug=True,port=5000,ssl_context=context)
+    #app.run(debug=True,port=5000,ssl_context=context,host= 'localhost')
+    app.run(debug=False,port=5000,ssl_context=context,host= '0.0.0.0')
