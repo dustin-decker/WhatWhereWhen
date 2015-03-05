@@ -27,7 +27,7 @@ def connect():
 handle = connect()
 
 app = Flask(__name__)
-app.secret_key = 'why would I tell you my secret key?'
+app.secret_key = os.urandom(24)
 nav = Navigation(app)
 limiter = Limiter(app)
 
@@ -200,5 +200,5 @@ def deleteall():
 
 # Remove the "debug=True" for production
 if __name__ == '__main__':
-    app.run(debug=True,port=5000,ssl_context=context,host= 'localhost')
-    #app.run(debug=False,port=5000,ssl_context=context,host= '0.0.0.0')
+    #app.run(debug=True,port=5000,ssl_context=context,host= 'localhost')
+    app.run(debug=False,port=5000,ssl_context=context,host= '0.0.0.0')
