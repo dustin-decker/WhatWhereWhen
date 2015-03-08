@@ -56,7 +56,7 @@ def frame_buster(response):
     ctx = _request_ctx_stack.top
     headers = response.headers
     #prevent clickjacking
-    headers['X-Frame-Options'] = 'DENY'
+    headers['X-Frame-Options'] = 'DENY'use
     #forces XSS filter built into recent web browsers
     headers['X-XSS-Protection'] = '1'
     return response
@@ -150,7 +150,7 @@ def upsertwrite():
     query = {"assetid": request.form.get("asset")}
     #upsert the new record
     assetid = handle.trackingdb.update(query,{"$set": fields},**{'upsert':True})
-    return redirect ("/upsert")
+    return redirect ("upsert")
 
 @app.route("/reportwrite", methods=['POST'])
 @basic_auth.required
@@ -188,9 +188,9 @@ def reportwrite():
             assetid = handle.trackingdb.update({'_id':objid},{"$set": retrieve},\
                         **{'upsert':True})
     except:
-        return redirect ("/report")
+        return redirect ("report")
 
-    return redirect ("/report")
+    return redirect ("report")
 
 
 #this is a development feature, it will not be on a production server
@@ -199,7 +199,7 @@ def reportwrite():
 @basic_auth.required
 def deleteall():
     handle.trackingdb.remove()
-    return redirect ("/")
+    return redirect ("")
 
 # Remove the "debug=True" for production
 if __name__ == '__main__':
