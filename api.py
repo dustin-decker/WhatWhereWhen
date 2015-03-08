@@ -192,6 +192,9 @@ def reportwrite():
 
     return redirect ("/report")
 
+
+#this is a development feature, it will not be on a production server
+#this is vulnerable to CSRF
 @app.route("/deleteall", methods=['GET'])
 @basic_auth.required
 def deleteall():
