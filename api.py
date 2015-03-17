@@ -17,6 +17,7 @@ from OpenSSL import SSL
 import random
 import string
 import datetime
+from functools import wraps
 
 #MongoDB settings
 def connect():
@@ -70,6 +71,18 @@ context.use_certificate_file('ast.crt')
 app.config['BASIC_AUTH_USERNAME'] = 'user'
 app.config['BASIC_AUTH_PASSWORD'] = 'pw'
 basic_auth = BasicAuth(app)
+
+#limit content size
+def limit_content_length(max_length):
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            cl = request.content_length
+            if cl is not None and cl > max_length:
+                abort(413)
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
 
 #MAIN ROUTES
 navbar_top = nav.Bar('top', [
@@ -129,6 +142,7 @@ def findreaderread():
 
 #WRITE FUNCTIONS
 @app.route("/upsertwrite", methods=['POST'])
+@limit_content_length(1024)
 @basic_auth.required
 def upsertwrite():
     """New record function"""
@@ -153,6 +167,7 @@ def upsertwrite():
     return redirect ("upsert")
 
 @app.route("/reportwrite", methods=['POST'])
+@limit_content_length(1024)
 @basic_auth.required
 def reportwrite():
     """Location reporting function"""

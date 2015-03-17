@@ -29,7 +29,7 @@ def report(entries):
 
 
 def postitreport(tag, location):
-    #change verifiy to True if using valid certs
+    #change verify to True if using valid certs
     #opens a session so we have the same token for our two requests
     client = requests.session()
     client.auth = ('user', 'pw')

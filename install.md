@@ -1,3 +1,5 @@
+This file is a work in progress...
+
 get mongo db per http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
